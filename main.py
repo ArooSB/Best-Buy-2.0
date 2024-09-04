@@ -1,9 +1,11 @@
-# main.py
 import products
 import promotions
 import store
 
 def display_menu():
+    """
+    Display the main menu options for the user.
+    """
     print("\nWelcome to Best Buy!")
     print("1. List all products in store")
     print("2. Show total amount in store")
@@ -11,6 +13,12 @@ def display_menu():
     print("4. Quit")
 
 def list_products(store: store.Store):
+    """
+    List all products available in the store.
+
+    Args:
+        store (store.Store): The store object containing products.
+    """
     products = store.get_all_products()
     if not products:
         print("No products available at the moment.")
@@ -19,10 +27,22 @@ def list_products(store: store.Store):
             print(product.show())
 
 def show_total_amount(store: store.Store):
+    """
+    Show the total quantity of all products in the store.
+
+    Args:
+        store (store.Store): The store object to query the total quantity.
+    """
     total_quantity = store.get_total_quantity()
     print(f"Total amount of all products in store: {total_quantity}")
 
 def make_order(store: store.Store):
+    """
+    Allow the user to make an order by selecting products and quantities.
+
+    Args:
+        store (store.Store): The store object to handle product orders.
+    """
     products = store.get_all_products()
     if not products:
         print("No products available to order.")
@@ -56,6 +76,12 @@ def make_order(store: store.Store):
         print("No items were added to the order.")
 
 def start(store: store.Store):
+    """
+    Start the main menu loop allowing the user to interact with the store.
+
+    Args:
+        store (store.Store): The store object to interact with.
+    """
     while True:
         display_menu()
         choice = input("Enter your choice: ")
@@ -72,7 +98,6 @@ def start(store: store.Store):
         else:
             print("Invalid choice, please try again.")
 
-# Setup initial stock of inventory
 product_list = [
     products.Product("MacBook Air M2", price=1450, quantity=100),
     products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
@@ -81,17 +106,14 @@ product_list = [
     products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
 ]
 
-# Create promotion catalog
 second_half_price = promotions.SecondHalfPrice("Second Half price!")
 third_one_free = promotions.ThirdOneFree("Third One Free!")
 thirty_percent = promotions.PercentDiscount("30% off!", percent=30)
 
-# Add promotions to products
 product_list[0].set_promotion(second_half_price)
 product_list[1].set_promotion(third_one_free)
 product_list[3].set_promotion(thirty_percent)
 
-# Create store and start program
 best_buy = store.Store(product_list)
 
 if __name__ == "__main__":
