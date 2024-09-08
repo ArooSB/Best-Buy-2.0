@@ -2,6 +2,7 @@ import products
 import promotions
 import store
 
+
 def display_menu():
     """
     Display the main menu options for the user.
@@ -11,6 +12,7 @@ def display_menu():
     print("2. Show total amount in store")
     print("3. Make an order")
     print("4. Quit")
+
 
 def list_products(store: store.Store):
     """
@@ -26,6 +28,7 @@ def list_products(store: store.Store):
         for product in products:
             print(product.show())
 
+
 def show_total_amount(store: store.Store):
     """
     Show the total quantity of all products in the store.
@@ -35,6 +38,7 @@ def show_total_amount(store: store.Store):
     """
     total_quantity = store.get_total_quantity()
     print(f"Total amount of all products in store: {total_quantity}")
+
 
 def make_order(store: store.Store):
     """
@@ -55,11 +59,13 @@ def make_order(store: store.Store):
     shopping_list = []
     while True:
         try:
-            product_idx = int(input("Enter the product number to buy (0 to finish): ")) - 1
+            product_idx = int(
+                input("Enter the product number to buy (0 to finish): ")) - 1
             if product_idx == -1:
                 break
             if 0 <= product_idx < len(products):
-                quantity = int(input(f"Enter quantity for {products[product_idx].name}: "))
+                quantity = int(input(
+                    f"Enter quantity for {products[product_idx].name}: "))
                 if quantity <= 0:
                     print("Quantity must be positive.")
                 else:
@@ -71,9 +77,37 @@ def make_order(store: store.Store):
 
     if shopping_list:
         total_price = store.order(shopping_list)
-        print(f"Total price of the order: {total_price:.2f} dollars.")
+        if total_price > 0:
+            print(f"Total price of the order: {total_price:.2f} dollars.")
     else:
         print("No items were added to the order.")
+
+
+def initialize_store() -> store.Store:
+    """
+    Initialize the store with products and promotions.
+
+    Returns:
+        store.Store: The initialized store object.
+    """
+    product_list = [
+        products.Product("MacBook Air M2", price=1450, quantity=100),
+        products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
+        products.Product("Google Pixel 7", price=500, quantity=250),
+        products.NonStockedProduct("Windows License", price=125),
+        products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
+    ]
+
+    second_half_price = promotions.SecondHalfPrice("Second Half price!")
+    third_one_free = promotions.ThirdOneFree("Third One Free!")
+    thirty_percent = promotions.PercentDiscount("30% off!", percent=30)
+
+    product_list[0].set_promotion(second_half_price)
+    product_list[1].set_promotion(third_one_free)
+    product_list[3].set_promotion(thirty_percent)
+
+    return store.Store(product_list)
+
 
 def start(store: store.Store):
     """
@@ -98,23 +132,7 @@ def start(store: store.Store):
         else:
             print("Invalid choice, please try again.")
 
-product_list = [
-    products.Product("MacBook Air M2", price=1450, quantity=100),
-    products.Product("Bose QuietComfort Earbuds", price=250, quantity=500),
-    products.Product("Google Pixel 7", price=500, quantity=250),
-    products.NonStockedProduct("Windows License", price=125),
-    products.LimitedProduct("Shipping", price=10, quantity=250, maximum=1)
-]
-
-second_half_price = promotions.SecondHalfPrice("Second Half price!")
-third_one_free = promotions.ThirdOneFree("Third One Free!")
-thirty_percent = promotions.PercentDiscount("30% off!", percent=30)
-
-product_list[0].set_promotion(second_half_price)
-product_list[1].set_promotion(third_one_free)
-product_list[3].set_promotion(thirty_percent)
-
-best_buy = store.Store(product_list)
 
 if __name__ == "__main__":
+    best_buy = initialize_store()
     start(best_buy)
